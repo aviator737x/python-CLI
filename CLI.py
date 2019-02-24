@@ -14,3 +14,4 @@ if __name__ == '__main__':
         if chckr.check(cmd_arr):
             functions.apply(cmd_arr)
         new_command = ''
+    print()
