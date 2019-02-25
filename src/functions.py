@@ -1,4 +1,5 @@
 from skbio.util._decorator import overrides
+import os
 
 
 class CommandInterface(object):
@@ -22,20 +23,45 @@ class CommandInterface(object):
 class Cat(CommandInterface):
     @overrides
     def main_method(self, path):
-        with open(path, 'r') as input_file
+        with open(path, 'r') as input_file:
+            result = ''
+            for line in input_file:
+                result += line
+        return result
 
 
-def echo(args=None):
-    pass
+class Echo(CommandInterface):
+    @overrides
+    def main_method(self, *args):
+        return args
 
 
-def wc(path):
-    pass
+class Wc(CommandInterface):
+    @overrides
+    def main_method(self, *args):
+        result = []
+        for path in args:
+            result.append({'line': 0, 'word': 0, 'byte': 0, 'file': path})
+            with open(path, 'r') as f:
+                for line in f:
+                    result[-1]['line'] += 1
+                    result[-1]['word'] += len(line.split())
+            with open(path, 'rb') as f:
+                for line in f:
+                    result[-1]['byte'] += len(line)
+        string_result = ''
+        for res in result:
+            string_result += \
+                '  {}  {}  {}  {}\n'.format(
+                    res['line'],
+                    res['word'],
+                    res['byte'],
+                    res['file'])
+
+        return string_result
 
 
-def pwd():
-    pass
-
-
-def apply(cmd, *args, **kwargs):
-    pass
+class Pwd(CommandInterface):
+    @overrides
+    def main_method(self):
+        return os.getcwd()

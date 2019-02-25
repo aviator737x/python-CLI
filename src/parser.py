@@ -1,16 +1,20 @@
-class parser(object):
-    def __init__(self):
-        self.operators = {'=', 'wc', 'cat', 'echo', 'pwd'}
+class Parser(object):
+    def __init__(self, namespace):
+        self.namespace = namespace
+        self.special = {'\'', '\"', '$', '=', '|', ' '}
 
     def parse(self, command):
-        res = [command]
-        for operator in self.operators:
-            new_res = []
-            for command in res:
-                splitted = command.split(operator)
-                print(splitted)
-                if len(splitted) > 1:
-                    for tag in splitted:
-                        new_res.extend([operator, tag])
-            res = new_res
+        res = []
+        buf = ''
+        for symbol in command:
+            if symbol not in self.special:
+                buf += symbol
+            else:
+                res.append(buf)
+                res.append(symbol)
+                buf = ''
+
+        res.append(buf)
+        commands_and_arguments = []
+
         return res
