@@ -65,3 +65,39 @@ class Pwd(CommandInterface):
     @overrides
     def main_method(self):
         return os.getcwd()
+
+
+class Ls(CommandInterface):
+    @overrides
+    def main_method(self, *args):
+        """Prints list of files and folders of given directory or of current directory if no arguments given"""
+        command = list(args)
+        if len(command) > 3:
+            return "ls takes zero or one parameter"
+        else:
+            if len(command) == 1 or len(command) == 2:
+                res = os.listdir(os.getcwd())
+                s = ""
+                for folder in res:
+                    s += folder + "\n"
+                return s
+            else:
+                res = os.listdir(command[2])
+                s = ""
+                for folder in res:
+                    s += folder + "\n"
+                return s
+
+
+class Cd(CommandInterface):
+    @overrides
+    def main_method(self, *args):
+        """Changes directory to given or doesn't change anything if no arguments given"""
+        command = list(args)
+        if len(command) > 3:
+            return "ls takes zero or one parameter"
+        else:
+            if len(command) == 1 or len(command) == 2:
+                os.chdir(os.getcwd())
+            else:
+                os.chdir(command[2])
